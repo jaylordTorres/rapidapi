@@ -1,30 +1,13 @@
 import { Router } from 'express'
-import { getBuilder, postBuilder } from '../builder'
-
 import mongoose from 'mongoose'
-
-const userSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    unique: true,
-  },
-})
-
-userSchema.statics.findByLogin = async function(login) {
-  let user = await this.findOne({
-    username: login,
-  })
-
-  if (!user) {
-    user = await this.findOne({ email: login })
-  }
-  return user
-}
-
-const User = mongoose.model('User', userSchema)
-
-const db_url =
-  'mongodb://jaylordtorres:qTgn8s@BT6ZjDzj@ds117773.mlab.com:17773/heroku_ct4wmvhs'
+import * as helpers from '../helper'
+import {
+  getBuilder,
+  postBuilder,
+  schemaBuilder,
+  putBuilder,
+  patchBuilder,
+} from '../builder'
 
 const MONGODB_URI = 'mongodb://ds117773.mlab.com:17773/heroku_ct4wmvhs'
 const MONGODB_USER = 'jaylordtorres2'
@@ -35,10 +18,12 @@ const authData = {
   pass: MONGODB_PASS,
   useNewUrlParser: true,
   useCreateIndex: true,
+  useFindAndModify: true,
 }
 //
 //
 //
+let db = {}
 
 const fnResource = ({ app, options }) => async resources => {
   try {
@@ -54,16 +39,27 @@ const fnResource = ({ app, options }) => async resources => {
   } catch (e) {
     console.log(e)
   }
-  const db = { User }
+
   console.log('ain db', db)
   await Object.keys(resources).map(key => {
     console.log('creating resources for: ', key)
+    const { modelBuilder } = resources[key]
+    // db builder
+    schemaBuilder({ key, db, modelBuilder, mongoose })
+
     const router = Router()
+    const resourceParams = { db, key, router, helpers }
     // get
-    getBuilder({ router, key, db })
+    getBuilder(resourceParams)
+
+    // patch
+    patchBuilder(resourceParams)
 
     // post
-    postBuilder({ router, key })
+    postBuilder(resourceParams)
+
+    // put
+    putBuilder(resourceParams)
 
     // config
     app.use(`/${key}`, router)
