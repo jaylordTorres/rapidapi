@@ -1,13 +1,9 @@
-export const getBuilder = ({ router, key, db }) => {
-  console.log('db')
-  console.log('creating resources GET for: ', key)
-  //
+export const getBuilder = ({ db, key, router }) => {
   router.get('/', async (req, res) => {
     try {
-      const user = await db.User.findByLogin('jaylord')
       return res.json({
         get: key,
-        user: user,
+        data: await db[key].find({}),
       })
     } catch (e) {
       console.log(e)
