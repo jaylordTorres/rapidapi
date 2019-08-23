@@ -1,6 +1,5 @@
 import { Router } from 'express'
-import { getBuilder } from '../builder/getBuilder'
-import { postBuilder } from '../builder/postBuilder'
+import { getBuilder, postBuilder } from '../builder'
 //
 //
 //
