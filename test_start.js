@@ -1,9 +1,13 @@
 import BlackThunder from './index'
 
-BlackThunder({
+const server = BlackThunder({
   port: process.env.PORT || '3000',
-}).resource({
+})
+
+server.resource({
   user: {
     model: 'modelName',
   },
 })
+
+server.start()
