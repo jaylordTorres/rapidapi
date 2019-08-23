@@ -1,13 +1,13 @@
 import { Router } from 'express'
 import mongoose from 'mongoose'
-import * as helpers from '../helper'
 import {
   getBuilder,
-  postBuilder,
-  schemaBuilder,
-  putBuilder,
   patchBuilder,
+  postBuilder,
+  putBuilder,
+  schemaBuilder,
 } from '../builder'
+import * as helpers from '../helper'
 
 const MONGODB_URI = 'mongodb://ds117773.mlab.com:17773/heroku_ct4wmvhs'
 const MONGODB_USER = 'jaylordtorres2'
@@ -18,12 +18,12 @@ const authData = {
   pass: MONGODB_PASS,
   useNewUrlParser: true,
   useCreateIndex: true,
-  useFindAndModify: true,
+  useFindAndModify: false,
 }
 //
 //
 //
-let db = {}
+const db = {}
 
 const fnResource = ({ app, options }) => async resources => {
   try {
@@ -40,27 +40,20 @@ const fnResource = ({ app, options }) => async resources => {
     console.log(e)
   }
 
-  console.log('ain db', db)
   await Object.keys(resources).map(key => {
-    console.log('creating resources for: ', key)
-    const { modelBuilder } = resources[key]
-    // db builder
-    schemaBuilder({ key, db, modelBuilder, mongoose })
-
     const router = Router()
-    const resourceParams = { db, key, router, helpers }
-    // get
-    getBuilder(resourceParams)
+    const { modelBuilder } = resources[key]
+    const resourceParams = { db, key, router, helpers, modelBuilder, mongoose }
+    const genList = [
+      // mut order base on needs
+      schemaBuilder,
+      getBuilder,
+      patchBuilder,
+      postBuilder,
+      putBuilder,
+    ]
 
-    // patch
-    patchBuilder(resourceParams)
-
-    // post
-    postBuilder(resourceParams)
-
-    // put
-    putBuilder(resourceParams)
-
+    genList.forEach(fn => fn(resourceParams))
     // config
     app.use(`/${key}`, router)
   })

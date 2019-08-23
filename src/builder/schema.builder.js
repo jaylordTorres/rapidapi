@@ -21,8 +21,6 @@ export const fnSample = mongoose => {
 }
 
 export const schemaBuilder = ({ key, db, modelBuilder, mongoose }) => {
-  console.log('creating resources DB for: ', key)
   const shema = modelBuilder(mongoose)
-
   db[key] = mongoose.model(key, shema)
 }
