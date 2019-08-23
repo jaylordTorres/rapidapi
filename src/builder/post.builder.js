@@ -1,8 +1,13 @@
-export const postBuilder = async ({ router, key }) => {
-  console.log('creating resources POST for: ', key)
-  router.post('/', (req, res) => {
-    res.json({
-      post: key,
-    })
+export const postBuilder = async ({ db, key, router, helpers }) => {
+  router.post('/', async (req, res) => {
+    try {
+      const rec = db[key](req.body)
+      await rec.save()
+
+      return helpers.success(res, rec)
+    } catch (e) {
+      console.log(e)
+      return res.sendStatus(400)
+    }
   })
 }
