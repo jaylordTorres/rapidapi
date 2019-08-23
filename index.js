@@ -3,11 +3,11 @@ import app from './src/app'
 import { fnResource, fnStart } from './src/gen'
 
 const BlackThunder = options => {
-  console.log('options:', options)
+  console.log('creating server using options:', options)
 
   const instance = {
-    resource: fnResource(app),
-    start: fnStart(app, options),
+    resource: fnResource({ app }),
+    start: fnStart({ app, options }),
   }
 
   return instance
