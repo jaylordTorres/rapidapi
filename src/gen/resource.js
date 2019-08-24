@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import mongoose from 'mongoose'
 import {
+  deleteBuilder,
   getBuilder,
   patchBuilder,
   postBuilder,
@@ -48,6 +49,7 @@ const fnResource = ({ app, options }) => async resources => {
       // mut order base on needs
       schemaBuilder,
       getBuilder,
+      deleteBuilder,
       patchBuilder,
       postBuilder,
       putBuilder,
