@@ -6,16 +6,5 @@ export const fnSample = mongoose => {
     },
   })
 
-  userSchema.statics.findByLogin = async function(login) {
-    let user = await this.findOne({
-      username: login,
-    })
-
-    if (!user) {
-      user = await this.findOne({ email: login })
-    }
-    return user
-  }
-
   return userSchema
 }
