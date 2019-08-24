@@ -11,7 +11,7 @@
     "build": "babel ./src --out-dir dist",
     "prod": "NODE_ENV=production npm-run-all clean build server:prod",
     "watch": "nodemon",
-    "testing": "babel-node ./test_start.js"
+    "testing": "babel-node ./example/test_start.js"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
